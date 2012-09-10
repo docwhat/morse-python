@@ -51,3 +51,4 @@ Note: As of 2012, these extra packages may or may not work anymore. I haven't te
  * PyGame -- a cross platform game development library for playing sound on a lot of platforms (Windows, Unix, Mac OS, etc...)
  * SDL -- Required for PyGame
  * PyESD -- for playing under ESound in Unix operating systems.
+ * ObjC -- Not needed if you're using the Python that came with OS X

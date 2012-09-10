@@ -56,6 +56,7 @@ class RndWords:
                 ('o:', None, 'Output a wave file'),
                 ('e',  None, 'Output sound via ESD'),
                 ('g',  None, 'Output sound via PyGame'),
+                ('X',  None, 'Output sound via native OS X'),
                 ('t:', 'text=', 'Play this text with no limiting.'),
                 ('s:', 'strip-file=', 'Read a file, stripping out characters'),
                 ('v', 'verbose', 'Display lots of extra info'),
@@ -254,6 +255,9 @@ OTHER USEFUL OPTIONS:
                 fd = open( arg, "wb" )
             from OutWav import OutWav
             self.output = OutWav(fd=fd)
+        elif opt == '-X':
+            from OutObjC import OutObjC
+            self.output = OutObjC()
         elif opt == '-g':
             from OutPyGame import OutPyGame
             self.output = OutPyGame()
