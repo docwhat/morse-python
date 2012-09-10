@@ -1,4 +1,8 @@
-## Christian Höltje's Python Morse Tutoring Program
+# Christian Höltje's Python Morse Tutoring Program
+
+Get the latest information from [github](http://github.com/docwhat/morse-python).
+
+## Original README intro
 
 Hello all!
 
@@ -29,13 +33,21 @@ Ciao!
 
 -– Christian Höltje
 
-File bugs, view source, etc. at
-[github](http://github.com/docwhat/morse-python)
+## Updated information
 
-Requirements:
- * Python version 2.2 (you can get this from http://python.org/) It may work on newer versions, dunno.
+This apparently works with the Python 2.7.2 that comes with Mac OS X 10.8.1,
+who would have guessed that this code would work 10 years later!
 
-Suggested Extras:
+To use this, run the `rndwords.py` app.  It has a bunch of flags
+to use different outputs. I've only tested the `-o <filename.wav>` output method.
+
+## Requirements
+ * [Python](http://python.org/) (version 2.2 or later)
+
+## Suggested Extras
+
+Note: As of 2012, these extra packages may or may not work anymore. I haven't tested them yet.
+
  * PyGame -- a cross platform game development library for playing sound on a lot of platforms (Windows, Unix, Mac OS, etc...)
  * SDL -- Required for PyGame
  * PyESD -- for playing under ESound in Unix operating systems.
