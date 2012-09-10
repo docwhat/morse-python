@@ -1,4 +1,4 @@
-Christian Holtje's Python Morse Tutoring Program
+Christian Höltje's Python Morse Tutoring Program
 
 Hello all!
 
@@ -25,12 +25,16 @@ domain as it's 1934 copyright has expired.  It's the Webster's
 Unabridged dictionary distilled into a word list.  I got this
 from NetBSD and seems to have been formatted by a James Woods.
 
-   Christian Holtje <docwhat@gerf.org>
-   http://docwhat.gerf.org/
+Ciao!
+
+-– Christian Höltje
+
+Website: http://trac.gerf.org/morse
+(file bugs, etc. here)
 
 Requirements:
 Python version 2.2 (you can get this from http://python.org/)
-
+It may work on newer versions, dunno.
 
 Suggested Extras:
 PyGame -- a cross platform game development library for playing sound on

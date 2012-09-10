@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- python; coding: utf-8 -*-
 
 from Characters import ARRL_prosigns
 import random

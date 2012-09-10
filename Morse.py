@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# -*- python -*-
+# -*- python; coding: utf-8 -*-
 #
 #   morse.py -- Python Morse Library
-#   Copyright (C) 2002 Christian Höltje
+#   Copyright (C) 2002, 2008 Christian HÃ¶ltje
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -331,7 +331,11 @@ class MorseCode(Strict):
 
 if __name__ == '__main__':
 
-    import esd
+    try:
+        import esd
+    except:
+        print >> sys.stderr, "This library requires the esd or eSound library to output sounds.  Without it, you won't be able to play sounds."
+        sys.exit(10)
 
 
     mc = MorseCode()

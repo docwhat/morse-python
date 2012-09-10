@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# -*- python -*-
+# -*- python; coding: utf-8 -*-
 LICENSE = \
 """
    rndwords -- Random Words in Morse
-   Copyright (C) 2002 Christian Höltje
+   Copyright (C) 2002, 2008 Christian HÃ¶ltje
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -111,7 +111,7 @@ OTHER USEFUL OPTIONS:
     def usage( self, error=None ):
         if error:
             print "Errors:\n%s\n" % error
-        print "Random Words in Morse   -- Copyright (C) 2002 Christian Höltje"
+        print "Random Words in Morse   -- Copyright (C) 2002, 2008 Christian HÃ¶ltje"
         print
         print "Usage: %s [options]" % sys.argv[0]
         print

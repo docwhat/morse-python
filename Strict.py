@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# -*- python -*-
+# -*- python; coding: utf-8 -*-
 #
 #   Strict.py -- A strict interface for attributes.
-#   Copyright (C) 2002 Christian Höltje
+#   Copyright (C) 2002, 2008 Christian HÃ¶ltje
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 class ReadOnlyError(AttributeError): pass
 
-class Strict:
+class Strict(object):
     _data = None
 
     def _get(self, name):
@@ -36,8 +36,7 @@ class Strict:
 
     def __setattr__(self, name, value):
         if name[0] == '_':
-            self.__dict__[name] = value
-            return
+            return object.__setattr__(self,name,value)
         else:
             if name not in self.attributes.keys():
                 raise AttributeError, name
@@ -48,7 +47,7 @@ class Strict:
 
     def __getattr__(self, name):
         if name[0] == '_':
-            return self.__dict__[name]
+            return object.__getattr__(self,name)
         if name not in self.attributes.keys():
             raise AttributeError, name
 
@@ -62,7 +61,11 @@ class Strict:
         keys = self.attributes.keys()
         keys.sort()
         for attr in keys:
-            txt.append( "[%s: %s]" % (attr, getattr(self, attr)) )
+            try:
+                value = getattr(self,attr)
+            except:
+                value = '*error*'
+            txt.append( "[%s: %s]" % (attr, value) )
         return ", ".join(txt)
 
     __repr__ = __str__
@@ -71,33 +74,50 @@ class Strict:
 if __name__ == '__main__':
 
     import unittest
-    class ExampleStrict(Strict):
-        _get = Strict._get
-        _set = Strict._set
-        
-        attributes = { 'one': (_get, _set),
-                       'two': (_get, _set),
-                       'ro' : (_get, None),
-                       'set': (None, _set),
-                       }
-
-        def __init__(self, **kw):
-            apply( Strict.__init__, (self,), kw )
-        
     class TestStrict(unittest.TestCase):
+        def setUp(self):
+            class ExampleStrict(Strict):
+                _get = Strict._get
+                _set = Strict._set
+
+                attributes = { 'one': (_get, _set),
+                               'two': (_get, _set),
+                               'ro' : (_get, None),
+                               'set': (None, _set),
+                               }
+
+                def __init__(self, **kw):
+                    apply( Strict.__init__, (self,), kw )
+
+            self.klass = ExampleStrict
+            self.object = ExampleStrict()
+
 
         def testSetGet(self):
-            s = ExampleStrict()
             self.failUnlessRaises( KeyError,
-                                   getattr, s, 'one' )
-            s.one = 1
-            s.two = 2
-            self.failUnlessEqual( s.one, 1 )
-            self.failUnlessEqual( s.two, 2 )
+                                   getattr, self.object, 'one' )
+            self.object.one = 1
+            self.object.two = 2
+            self.failUnlessEqual( self.object.one, 1 )
+            self.failUnlessEqual( self.object.two, 2 )
 
         def testSet(self):
-            s = ExampleStrict()
             self.failUnlessRaises( ReadOnlyError,
-                                   setattr, s, 'ro', 2 )
+                                   setattr, self.object, 'ro', 2 )
+            self.object.__fish__ = 1
+            self.failUnlessEqual( self.object.__fish__, 1 )
+
+        def testAttrError(self):
+            """Make sure that AttributeError is raised when fetching
+            non-existant attributes"""
+            self.failUnlessRaises( AttributeError, getattr,
+                                   self.object, '__nozero__' )
+            self.failUnlessRaises( AttributeError, getattr,
+                                   self.object, 'noexist' )
+
+        def testStr(self):
+            self.object.one = 'red'
+            self.object.two = 'fish'
+            str(self.object)
 
     unittest.main()

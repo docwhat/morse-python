@@ -1,9 +1,10 @@
+# -*- python; coding: utf-8 -*-
 """
 A set of morse code characters.
 """
 #
 #   characters.py -- Character collections.
-#   Copyright (C) 2002 Christian Höltje
+#   Copyright (C) 2002, 2008 Christian HÃ¶ltje
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
