@@ -1,4 +1,4 @@
-Christian Höltje's Python Morse Tutoring Program
+## Christian Höltje's Python Morse Tutoring Program
 
 Hello all!
 
@@ -29,16 +29,13 @@ Ciao!
 
 -– Christian Höltje
 
-Website: http://trac.gerf.org/morse
-(file bugs, etc. here)
+File bugs, view source, etc. at
+[github](http://github.com/docwhat/morse-python)
 
 Requirements:
-Python version 2.2 (you can get this from http://python.org/)
-It may work on newer versions, dunno.
+ * Python version 2.2 (you can get this from http://python.org/) It may work on newer versions, dunno.
 
 Suggested Extras:
-PyGame -- a cross platform game development library for playing sound on
-          a lot of platforms (Windows, Unix, Mac OS, etc...)
-SDL -- Required for PyGame
-                 
-PyESD -- for playing under ESound in Unix operating systems.
+ * PyGame -- a cross platform game development library for playing sound on a lot of platforms (Windows, Unix, Mac OS, etc...)
+ * SDL -- Required for PyGame
+ * PyESD -- for playing under ESound in Unix operating systems.
