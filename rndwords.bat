@@ -1,4 +1,4 @@
 @echo off
 
 shift
-python rndwords %0 %1 %2 %3 %4 %5 %6 %7 %8 %9
+python rndwords.py %0 %1 %2 %3 %4 %5 %6 %7 %8 %9

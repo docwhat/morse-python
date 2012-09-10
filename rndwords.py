@@ -24,7 +24,8 @@ import getopt, sys
 import random
 
 sys.path.append( '/usr/local/lib/morse' )
-from Characters import morse_dict,ARRL_list,ARRL_lessons,ARRL_prosigns
+from Characters import morse_dict,ARRL_list,ARRL_lessons,KOCH_lessons,ARRL_prosigns
+from HamWords import randomHamWord
 
 class OutOfWordsError(IndexError): pass
 
@@ -37,13 +38,18 @@ class RndWords:
                              "common_words" )
 
     options = ( ('d:', 'dict', 'Dictionary File'),
-                ('l:', 'lesson=', 'Limit words by lesson number (or less)'),
-                ('L',  'list-lessons', 'List all lessions'),
+                ('c', 'no-caps', 'Ignore words that begin with capitals'),
+                ('l:', 'arrl-lesson=', 'Limit words by ARRL lesson number (or less)'),
+                ('L',  'list-arrl-lessons', 'List all ARRL lessons'),
+                ('k:', 'koch-lesson=', 'Limit words by Koch lesson number (or less)'),
+                ('K',  'list-koch-lessons', 'List all ARRL lessons'),
                 ('a',  'all-arrl', 'Limit words by all ARRL exam characters'),
                 ('A',  'list-all-arrl', 'List all the ARRL exam characters'),
                 ('m',  'all-morse', 'Limit words by morse characters'),
                 ('M',  'list-all-morse', 'List all morse characters'),
+                ('h', 'hamwords', 'Use HamWords library for additional words'),
                 ('u:', None, 'Use only these characters'),
+                ('x:', 'extra=', 'Use these extra characters (in addition)'),
                 ('p:', 'priority=', 'Give these characters priority'),
                 ('n:', None, 'Number of words to select'),
                 (None, 'seconds=', 'Minimum number of seconds worth of words'),
@@ -53,10 +59,10 @@ class RndWords:
                 ('t:', 'text=', 'Play this text with no limiting.'),
                 ('s:', 'strip-file=', 'Read a file, stripping out characters'),
                 ('v', 'verbose', 'Display lots of extra info'),
-                (None, 'transmission_speed=', 'Number of words per minute'),
-                (None, 'character_speed=', 'Speed of individual characters'),
+                (None, 'transmission_speed=', 'Number of words per minute (def: 6)'),
+                (None, 'character_speed=', 'Speed of individual characters (def: 18)'),
                 (None, 'sample_rate=', 'Sample rate of the sound output'),
-                (None, 'frequency=', 'Frequency of the beep'),
+                (None, 'frequency=', 'Frequency of the beep (def: 720)'),
                 (None, 'mono', 'Mono sound output'),
                 (None, 'stereo', 'Stereo sound output'),
                 (None, '8bit', '8bit sound output'),
@@ -68,11 +74,11 @@ class RndWords:
     def extra_help( self ):
         print """
 REQUIRED OPTIONS:
-  You must use -l, -a, -m, or -u to choose words that are would be
+  You must use -l, -k, -a, -m, or -u to choose words that are would be
   appropriate for specific lessons, the exam, morse code, or
   you may use a manually entered list of characters.  You can
   see these list of characters by using the capital version of
-  each letter: -L, -A, or -M  (there is no list for -u)
+  each letter: -L, -K, -A, or -M  (there is no list for -u)
 
   Alternatively, you can specify text exact text to transmit
   by using -t 'text to play'.  You need quotes to have it
@@ -150,9 +156,9 @@ OTHER USEFUL OPTIONS:
         self.output_options = { 'is_8bit': false,
                                 'is_stereo': false,
                                 'volume': 100,
-                                'frequency': 700,
+                                'frequency': 720,
                                 'transmission_speed': 6,
-                                'character_speed': None,
+                                'character_speed': 18,
                                 'sample_rate': None }
         random.seed()
 
@@ -201,17 +207,22 @@ OTHER USEFUL OPTIONS:
         return true
 
     def checkCharacters( self, opt, arg ):
-        if opt in ('-l', '--lesson'):
+        if opt in ('-l', '--arrl-lesson',
+                   '-k', '--koch-lesson' ):
+            if opt in ('-k', '--koch-lesson'):
+                lessons = KOCH_lessons
+            else:
+                lessons = ARRL_lessons
             if arg == 'all':
-                self.dict['character_list'] = "".join( ARRL_lessons )
-            elif int(arg) >= 1 and int(arg) <= (len(ARRL_lessons)+1):
+                self.dict['character_list'] = "".join( lessons )
+            elif int(arg) >= 1 and int(arg) <= (len(lessons)+1):
                 if int(arg) == 1:
-                    self.dict['character_list'] = ARRL_lessons[0]
+                    self.dict['character_list'] = lessons[0]
                 else:
-                    self.dict['character_list'] = "".join(ARRL_lessons[:int(arg)])
+                    self.dict['character_list'] = "".join(lessons[:int(arg)])
             else:
                 self.errors.append( "Lessons range from 1 and %s" %\
-                                    (len(ARRL_lessons)+1) )
+                                    (len(lessons)+1) )
         elif opt in ('-a', '--all-arrl'):
             self.dict['character_list'] = ARRL_list
         elif opt in ('-m', '--all-morse'):
@@ -220,6 +231,12 @@ OTHER USEFUL OPTIONS:
             self.dict['character_list'] = arg.upper()
         elif opt in ('-p','--priority'):
             self.dict['priority_list'] = arg.upper()
+        elif opt in ('-c','--no_caps'):
+            self.dict['no_caps'] = true
+        elif opt in ('-x','--extra'):
+            self.dict['extra_characters'] = arg.upper()
+        elif opt in ('-h','--hamwords'):
+            self.dict['hamwords'] = true
         else:
             return false
         return true
@@ -261,7 +278,7 @@ OTHER USEFUL OPTIONS:
             ts = int(arg)
             oopts['transmission_speed'] = ts
         elif opt in ('--character_speed',):
-            cs = int(cs)
+            cs = int(arg)
             oopts['character_speed'] = cs
         elif opt in ('--sample_rate',):
             sr = int(sr)
@@ -299,10 +316,17 @@ OTHER USEFUL OPTIONS:
         elif opt == '--license':
             print LICENSE
             sys.exit(0)
-        elif opt in ('-L', '--list_lessons'):
+        elif opt in ('-L', '--list-arrl-lessons'):
             print "ARRL Lesson List\n"
             count = 1
             for l in ARRL_lessons:
+                print "%d: %s" % (count, l)
+                count += 1
+            sys.exit(0)
+        elif opt in ('-K', '--list-koch-lessons'):
+            print "Koch Lesson List\n"
+            count = 1
+            for l in KOCH_lessons:
                 print "%d: %s" % (count, l)
                 count += 1
             sys.exit(0)
@@ -345,19 +369,34 @@ OTHER USEFUL OPTIONS:
     def setDefaults(self):
         d = self.dict
 
+        self.hamwords = false
         if d.has_key('character_list'):
             self.character_list = d['character_list']
             del d['character_list']
+            if d.has_key('extra_characters'):
+                self.character_list += d['extra_characters']
+                del d['extra_characters']
             self.character_list += " "
             self.priority_list = ""
             if not d.has_key('number_of_words') and \
                not d.has_key('minimum_seconds'):
                 d['minimum_seconds'] = 60
+            if d.has_key('hamwords'):
+                self.hamwords = true
+                del d['hamwords']
+
+
+
+        if d.has_key('no_caps'):
+            self.no_caps = true
+            del d['no_caps']
+        else:
+            self.no_caps = false
 
         if d.has_key('priority_list'):
             self.priority_list = d['priority_list']
             del d['priority_list']
-            
+
         if self.output:
             for k in self.output_options.keys():
                 v = self.output_options[k]
@@ -418,6 +457,23 @@ OTHER USEFUL OPTIONS:
         return float(total_units)/units_per_sec
 
     def getRandomWord( self ):
+        retval = None
+        if self.hamwords and random.randint( 0, 2 ) == 1:
+            self.stat_count += 1
+            retval = randomHamWord()
+        else:
+            word = self.getRandomDictWord()
+            if self.no_caps:
+                while word[0].isupper():
+                    word = self.getRandomDictWord()
+            retval = word
+
+        if retval is None:
+            raise ProgrammingError, "Null word generated!!"
+        else:
+            return retval
+
+    def getRandomDictWord( self ):
         if len(self.dictionary) == 0:
             raise OutOfWordsError, "There are no more words left!"
         
@@ -437,7 +493,7 @@ OTHER USEFUL OPTIONS:
                 self.verbose.write( "Checking %-45s  " % ("'%s'" % word) )
             valid = self.isWithinSet( self.character_list, word )
             if valid and self.priority_list:
-                valid = self.isWithinSet( self.priority_list, word )
+                valid = self.isWithinSet( word.upper(), self.priority_list )
             if valid:
                 self.stat_good += 1
                 if self.debug:
@@ -492,13 +548,9 @@ OTHER USEFUL OPTIONS:
         return " ".join(words)
 
     def transmit(self):
-        if self.dict.has_key('raw_text'):
-            words = self.dict['raw_text']
-        else:
-            words = self.getWords()
-
         if self.verbose:
             if self.dictionary:
+                has_dict = true
                 text = "Words in dictionary: %s\n"\
                        "Character List: %s\n"\
                        "Priority List: %s\n" %\
@@ -506,7 +558,15 @@ OTHER USEFUL OPTIONS:
                          self.character_list,
                          self.priority_list )
                 self.stdout.write( text )
+            else:
+                has_dict = false
 
+        if self.dict.has_key('raw_text'):
+            words = self.dict['raw_text']
+        else:
+            words = self.getWords()
+
+        if self.verbose and has_dict:
             text = "Stats: %d searched, %d rejected, %d good\n"\
                    "Length: %d seconds\n" %\
                    ( self.stat_count, self.stat_bad, self.stat_good,

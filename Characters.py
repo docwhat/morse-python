@@ -88,4 +88,13 @@ ARRL_lessons = ( 'AERN+T',
                  '12345',
                  '67890' )
 
+# Koch Method Lessons
+KOCH_lessons = ( 'KMRSUA',
+                 'PTLOWI',
+                 '.NJE0FY',
+                 ',VG5/Q',
+                 '9ZH38B',
+                 '?427C1',
+                 'D6X=*+' )
+
 ARRL_prosigns = '.,?+*=/'

@@ -121,13 +121,13 @@ class MorseCode(Strict):
         else:
             if self.is_unsigned:
                 # Unsigned 16bit
-                zero = 32766
-                volmax = 32766
+                zero = 32768
+                volmax = 32760
                 achar = 'H'
             else:
                 # Signed 16bit
                 zero = 0
-                volmax = 16383
+                volmax = 32760
                 achar = 'h'
                 
         self._data['zero'] = zero
@@ -172,7 +172,7 @@ class MorseCode(Strict):
                        'is_stereo':       false,
                        'is_arrl_wpm':     true,
                        'is_arrl_spacing': true,
-                       'volume':          90,
+                       'volume':          95,
                        }
         self.is_unsigned = true
         self.is_8bit = true

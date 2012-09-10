@@ -20,6 +20,11 @@ the ARRL and FCC exams.
 
 I hope you like it.
 
+BTW: The webster2 is *not* GPL.  It's technically in the public
+domain as it's 1934 copyright has expired.  It's the Webster's
+Unabridged dictionary distilled into a word list.  I got this
+from NetBSD and seems to have been formatted by a James Woods.
+
    Christian Holtje <docwhat@gerf.org>
    http://docwhat.gerf.org/
 
