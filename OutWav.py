@@ -59,14 +59,14 @@ class OutWav(Strict):
             del kw['fd']
         else:
             self._fd = None
-            
+
         apply( Strict.__init__, (self,), kw )
 
     def bytesForStr(self, text):
         data = self._morse.bytesForStr( text )
 
         header = array(self._morse.array_char)
-        
+
         header.fromstring( "data"+\
                            pack("<L",len(data)*data.itemsize) )
         data = header+data

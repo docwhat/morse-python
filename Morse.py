@@ -39,11 +39,11 @@ class Beep:
             #return step/front # trapezoid
             #return sin( pi*step/(front*2.0) ) # 1/4 sin
             return sin( pi*i ) # 1/4 sin
-            return (sin(pi*(i - 0.5)) + 1)/2.0
-        
+            #return (sin(pi*(i - 0.5)) + 1)/2.0
+
         if step < cycles - front:
             return 1
-        
+
         if step < (cycles-1):
             # number from 0 to 1
             i = (cycles-step)/(front*2.0)
@@ -51,26 +51,26 @@ class Beep:
             #return sin( pi*(cycles-step)/(front*2.0) ) # 1/4 sin
             return sin( pi*i ) # 1/4 sin
             #return (sin(pi*(i - 0.5)) + 1)/2.0
-            
+
 
         return 0
 
     def __init__(self,
                  sample_rate,
                  frequency, channels=1):
-        
+
         self.sample_rate = float(sample_rate)
         self.frequency = float(frequency)
         self.divisor = (sample_rate/frequency)/2.0
         self.channels = channels
-        
+
 
     def __call__(self, duration, volume, type='B', zero=127):
         duration = float(duration)
         volume = float(volume)
 
         cycles = int(duration * self.sample_rate)
-        
+
         s = array(type)
 
         if volume == 0.0:
@@ -129,7 +129,7 @@ class MorseCode(Strict):
                 zero = 0
                 volmax = 32760
                 achar = 'h'
-                
+
         self._data['zero'] = zero
         self._data['volume_max'] = volmax
         self._data['array_char'] = achar
@@ -234,7 +234,7 @@ class MorseCode(Strict):
     def _fillCache(self):
         if self.__dict__['_cache']:
             return
-        
+
         cache = {}
         if self.is_stereo:
             channels = 2
@@ -244,7 +244,7 @@ class MorseCode(Strict):
                                    frequency=self.frequency,
                                    channels=channels )
         vol = float(self.volume)*float(self.volume_max)/100.0
-        
+
         cache['cs']   = beeper( duration=self._Tc,
                                 volume=0.0,
                                 zero=self.zero,
@@ -347,7 +347,7 @@ if __name__ == '__main__':
     #mc.is_arrl_wpm = false
     #mc.is_arrl_spacing = false
 
-    fmt = esd.ESD_PLAY | esd.ESD_MONO 
+    fmt = esd.ESD_PLAY | esd.ESD_MONO
     if mc.is_8bit:
         fmt |= esd.ESD_BITS8
     else:

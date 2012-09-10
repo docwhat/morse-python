@@ -39,7 +39,7 @@ class OutPyGame(OutWav):
         mixer.init(self.sample_rate)
         snd = pygame.mixer.Sound( fobj )
         channel = snd.play()
-        
+
         while channel.get_busy():
             time.wait(1000)
 
@@ -51,4 +51,4 @@ if __name__ == '__main__':
     p = OutPyGame()
     p.sample_rate = 44100
     p.generate( "This is text we want played via PyGame." )
-    
+

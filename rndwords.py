@@ -125,7 +125,7 @@ OTHER USEFUL OPTIONS:
             else:
                 short = ""
             if long:
-            
+
                 long = "--%s" % long.replace( '=', ' <arg>' )
             else:
                 long = ""
@@ -183,7 +183,7 @@ OTHER USEFUL OPTIONS:
         if len(args) > 0:
             self.usage( "Don't know what to do with argument(s): %s" % args )
             sys.exit(2)
-        
+
         for opt, arg in opts:
             if not self.checkLength( opt, arg ) and\
                not self.checkCharacters( opt, arg ) and\
@@ -344,7 +344,7 @@ OTHER USEFUL OPTIONS:
         else:
             return false
         return true
-            
+
 
     def verifyOptions(self):
         d = self.dict
@@ -402,7 +402,7 @@ OTHER USEFUL OPTIONS:
                 v = self.output_options[k]
                 if v != None:
                     setattr( self.output, k, v )
-            
+
         if d.has_key('strip_file'):
             d['raw_text'] = self.stripFile( d['strip_file'] )
 
@@ -476,7 +476,7 @@ OTHER USEFUL OPTIONS:
     def getRandomDictWord( self ):
         if len(self.dictionary) == 0:
             raise OutOfWordsError, "There are no more words left!"
-        
+
         index = random.randint( 0, len(self.dictionary) - 1 )
         word = self.dictionary[index]
         self.dictionary[index] = self.dictionary[-1]
@@ -506,12 +506,12 @@ OTHER USEFUL OPTIONS:
             if self.verbose:
                 self.verbose.flush()
         return word
-                
+
     def isWithinSet(self, set, word):
         for c in word.upper():
             if c not in set: return false
         return true
-    
+
     def getWords( self ):
         words = []
         if self.dict.has_key('number_of_words'):
@@ -572,7 +572,7 @@ OTHER USEFUL OPTIONS:
                    ( self.stat_count, self.stat_bad, self.stat_good,
                      self.getSeconds( words ) )
             self.verbose.write( text )
-                     
+
         if self.output:
             if self.verbose:
                 text = "Overall Transmission Speed: %s wpm\n"\
@@ -591,5 +591,5 @@ OTHER USEFUL OPTIONS:
 if __name__ == "__main__":
     rndwords = RndWords()
     rndwords.transmit()
-    
+
 

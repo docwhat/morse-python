@@ -104,7 +104,7 @@ def radioModel():
 def hamBand():
     index = random.randint( 0, len(bands) - 1 )
     return bands[index]
-    
+
 def bandList():
     b = bands[:]
     band_list = []
@@ -132,7 +132,7 @@ def randomHamWord():
     index = random.randint( 0, len(choices) - 1 )
 
     return choices[index]()
-    
+
 if __name__ == '__main__':
     print "callSign: %s" % callSign()
     print "radioModel: %s" % radioModel()
